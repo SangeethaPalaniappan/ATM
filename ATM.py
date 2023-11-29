@@ -1,9 +1,3 @@
-import importlib
-
-# import a module using its name as a string
-bk = importlib.import_module('Bank_Account')
-
-
 class ATM:
     def __init__(self, arr):    
         self.balance = 0
@@ -37,7 +31,7 @@ class ATM:
                 
                 if amount < 100000 and amount > 1000:
                     if self.check_pin(requested_account) == True:
-                            if requested_account.withdraw_process(amount, requested_account.balance) != None:
+                            if requested_account.withdraw(amount) != None:
                                 print("Rs.", amount, "withdrawn Successfully")
                             else:
                                 return None    
@@ -75,51 +69,49 @@ class ATM:
 
         total_count = (self.hundrd_count * 100) + (self.twohundr_count * 200) + (self.five_hundr_count * 500)
         return total_count
-    
     def add_cash_count(self):
         self.hundrd_counts       += self.hundrd_count
         self.two_hundrd_counts   += self.twohundr_count
         self.five_hundrd_counts  += self.five_hundr_count
 
-    def withdraw_process(self, amount, account_balance):
-        count_of_five_hundrd, count_of_two_hundrd, count_of_one_hundrd  = 0, 0 ,0 
+        def withdraw_process(self, amount, account_balance):
+            count_of_five_hundrd, count_of_two_hundrd, count_of_one_hundrd  = 0, 0 ,0 
 
-        five_hundrd = atm_machine.five_hundrd_counts
-        two_hundrd = atm_machine.two_hundrd_counts
-        one_hundrd = atm_machine.hundrd_counts
+            five_hundrd = atm_machine.five_hundrd_counts
+            two_hundrd = atm_machine.two_hundrd_counts
+            one_hundrd = atm_machine.hundrd_counts
 
-        while (amount % 500 == 0 or amount % 500 == 200 or amount % 500 == 100)and amount != 0 and five_hundrd != 0:
-            amount -= 500
-            count_of_five_hundrd += 1
-            five_hundrd -= 1
-            if amount == 100 or amount == 200:
-                break
-            
-        while (amount % 200 == 0 or amount % 200 == 100) and amount != 0 and two_hundrd != 0:
-            
-            amount -= 200
-            count_of_two_hundrd += 1
-            two_hundrd -= 1
-            if amount == 100:
-                break
-            
-        while amount % 100 == 0 and amount != 0 and one_hundrd != 0:
-            
-            amount -= 100
-            count_of_one_hundrd += 1  
-            one_hundrd -= 1 
-            
-        if amount == 0:       
-            atm_machine.hundrd_counts       -= count_of_one_hundrd
-            atm_machine.two_hundrd_counts   -= count_of_two_hundrd
-            atm_machine.five_hundrd_counts  -= count_of_five_hundrd 
-            
-            bk.balance = account_balance
-            return bk.balance
-        else:
-            print("Account do not have the cash", amount)
-            return None    
-
+            while (amount % 500 == 0 or amount % 500 == 200 or amount % 500 == 100)and amount != 0 and five_hundrd != 0:
+                amount -= 500
+                count_of_five_hundrd += 1
+                five_hundrd -= 1
+                if amount == 100 or amount == 200:
+                    break
+                
+            while (amount % 200 == 0 or amount % 200 == 100) and amount != 0 and two_hundrd != 0:
+                
+                amount -= 200
+                count_of_two_hundrd += 1
+                two_hundrd -= 1
+                if amount == 100:
+                    break
+                
+            while amount % 100 == 0 and amount != 0 and one_hundrd != 0:
+                
+                amount -= 100
+                count_of_one_hundrd += 1  
+                one_hundrd -= 1 
+                
+            if amount == 0:       
+                atm_machine.hundrd_counts       -= count_of_one_hundrd
+                atm_machine.two_hundrd_counts   -= count_of_two_hundrd
+                atm_machine.five_hundrd_counts  -= count_of_five_hundrd 
+                self.balance = account_balance
+                return self.balance
+            else:
+                print("Account do not have the cash", amount)
+                return None    
+  
 
     def transaction(self, acc_no, arr):
         while True:
@@ -162,12 +154,12 @@ class ATM:
                         
     
 
-accholder_1 = bk(1234, "Sangeetha", 2345)
-accholder_2 = bk(2345, "Padmaja", 3456)
-accholder_3 = bk(3456, "Abinaya", 5678)
-accholder_4 = bk(5678, "Akshaya", 6789)
-accholder_5 = bk(6789, "Keerthana", 7890)
-accholder_6 = bk(7890, "Kaviya", 8901)
+accholder_1 = Bank_Account(1234, "Sangeetha", 2345)
+accholder_2 = Bank_Account(2345, "Padmaja", 3456)
+accholder_3 = Bank_Account(3456, "Abinaya", 5678)
+accholder_4 = Bank_Account(5678, "Akshaya", 6789)
+accholder_5 = Bank_Account(6789, "Keerthana", 7890)
+accholder_6 = Bank_Account(7890, "Kaviya", 8901)
 
 print(accholder_1.balance)
 arr = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
