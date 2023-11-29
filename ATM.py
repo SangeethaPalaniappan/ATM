@@ -1,6 +1,15 @@
+import sys
+
+# append a new directory to sys.path
+sys.path.append(r'C:\Users\sange\ATM')
+
+# now you can import your module
+import Bank_Account as bk
+
+
 class ATM:
     def __init__(self, arr):    
-        self.balance = 0
+        self.atm_balance = 0
         self.arr_bank_holders = arr
         self.hundrd_counts = 0
         self.two_hundrd_counts = 0
@@ -12,14 +21,14 @@ class ATM:
             if acc_no == requested_account.acc_no:
                 if amount > 1000 and amount < 100000:
                     if self.check_pin(requested_account) == True:
-                        requested_account.deposit(amount)
+                        requested_account.deposits(amount)
                         print("Rs.", amount, "deposited Successfully")                        
                 else:
                     print("Dear", requested_account.name,", You can deposit only between Rs.1000 and Rs.100000")
                     return self.balance
                 break
-        self.balance += amount
-        return self.balance
+        self.atm_balance += amount
+        return self.atm_balance
     
     def withdraw(self, acc_no, amount):
 
@@ -31,7 +40,9 @@ class ATM:
                 
                 if amount < 100000 and amount > 1000:
                     if self.check_pin(requested_account) == True:
-                            if requested_account.withdraw(amount) != None:
+                            obj_withdraw_process = self.withdraw_process(amount, requested_account.balance )
+                            if obj_withdraw_process != None:
+                                requested_account.withdraws(amount)
                                 print("Rs.", amount, "withdrawn Successfully")
                             else:
                                 return None    
@@ -41,8 +52,8 @@ class ATM:
                     print("Dear", requested_account.name, ", You can withdraw only between Rs.1000 and Rs.100000")
                     return self.balance
                 break    
-        self.balance -= amount
-        return self.balance
+        self.atm_balance -= amount
+        return self.atm_balance
     
     def check_pin(self, bank_account):
         enter_pin = int(input("Enter the Pin : "))
@@ -59,7 +70,7 @@ class ATM:
                 print("Account No.         : ", account_arr[accounts].acc_no, ) 
                 print("Balance             : ", account_arr[accounts].balance)
                 break
-        print("ATM_machine balance : ", self.balance)
+        print("ATM_machine balance : ", self.atm_balance)
     
     def cash_count(self):
         
@@ -74,7 +85,9 @@ class ATM:
         self.two_hundrd_counts   += self.twohundr_count
         self.five_hundrd_counts  += self.five_hundr_count
 
-        def withdraw_process(self, amount, account_balance):
+    def withdraw_process(self, amount, account_balance):
+        final_balance = account_balance - amount
+        if final_balance >= 500:
             count_of_five_hundrd, count_of_two_hundrd, count_of_one_hundrd  = 0, 0 ,0 
 
             five_hundrd = atm_machine.five_hundrd_counts
@@ -106,12 +119,15 @@ class ATM:
                 atm_machine.hundrd_counts       -= count_of_one_hundrd
                 atm_machine.two_hundrd_counts   -= count_of_two_hundrd
                 atm_machine.five_hundrd_counts  -= count_of_five_hundrd 
-                self.balance = account_balance
+                self.balance = final_balance
                 return self.balance
             else:
                 print("Account do not have the cash", amount)
                 return None    
-  
+        else:
+            print("Your account must have minimum balance of Rs.500")
+            return None     
+
 
     def transaction(self, acc_no, arr):
         while True:
@@ -154,12 +170,12 @@ class ATM:
                         
     
 
-accholder_1 = Bank_Account(1234, "Sangeetha", 2345)
-accholder_2 = Bank_Account(2345, "Padmaja", 3456)
-accholder_3 = Bank_Account(3456, "Abinaya", 5678)
-accholder_4 = Bank_Account(5678, "Akshaya", 6789)
-accholder_5 = Bank_Account(6789, "Keerthana", 7890)
-accholder_6 = Bank_Account(7890, "Kaviya", 8901)
+accholder_1 = bk.Bank_account(1234, "Sangeetha", 2345)
+accholder_2 = bk.Bank_account(2345, "Padmaja", 3456)
+accholder_3 = bk.Bank_account(3456, "Abinaya", 5678)
+accholder_4 = bk.Bank_account(5678, "Akshaya", 6789)
+accholder_5 = bk.Bank_account(6789, "Keerthana", 7890)
+accholder_6 = bk.Bank_account(7890, "Kaviya", 8901)
 
 print(accholder_1.balance)
 arr = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
@@ -189,7 +205,7 @@ for i in range(len(arr)):
         print("Account_No.\t", "Balance\n")
     print(arr[i].acc_no, "\t\t", arr[i].balance, "\n")
 
-print("ATM_machine balance : ", atm_machine.balance)
+print("ATM_machine balance : ", atm_machine.atm_balance)
 print("No. of hundred rupees notes      : ", atm_machine.hundrd_counts)
 print("No. of two_hundred rupees notes  : ", atm_machine.two_hundrd_counts)
 print("No. of five_hundred rupees notes : ", atm_machine.five_hundrd_counts)
