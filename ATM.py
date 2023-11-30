@@ -8,12 +8,49 @@ import Bank_Account as bk
 
 
 class ATM:
-    def __init__(self, arr):    
-        self.atm_balance = 0
-        self.arr_bank_holders = arr
-        self.hundrd_counts = 0
-        self.two_hundrd_counts = 0
-        self.five_hundrd_counts = 0
+    def __init__(self, array):   
+
+        arr = []
+        g = open("python.txt")
+        for text in g:
+            arr.append(text)
+        g.close()
+
+        arrays = []
+        for amount in arr:
+            arrays.append(amount.split(","))
+
+
+        for nums in range(len(arrays)):
+            if arrays[nums][0] == "\n":
+                continue
+            for req_acc in array:
+                if arrays[nums][0] == "\n":
+                    continue
+                if req_acc.acc_no == int(arrays[nums][0]):
+                    req_acc.balance += int(arrays[nums][1])
+                    break
+            
+        self.__atm_balance = int(arrays[len(arrays) - 1][0])
+        self.arr_bank_holders = array
+        self.hundrd_counts = int(arrays[len(arrays) - 1][1])
+        self.two_hundrd_counts = int(arrays[len(arrays) - 1][2])
+        self.five_hundrd_counts = int(arrays[len(arrays) - 1][3])
+        self.printing_details(array)
+
+
+    def printing_details(self, arr):
+        for i in range(len(arr)):
+            if i == 0:
+                print("Account_No.\t", "Balance\n")
+
+            print(arr[i].acc_no, "\t\t", arr[i].balance, "\n")   
+        
+        print("\n")
+        print("ATM_machine balance : ", self.__atm_balance)
+        print("No. of hundred rupees notes      : ", self.hundrd_counts)
+        print("No. of two_hundred rupees notes  : ", self.two_hundrd_counts)
+        print("No. of five_hundred rupees notes : ", self.five_hundrd_counts)      
 
     def deposit(self, acc_no, amount):
 
@@ -27,8 +64,8 @@ class ATM:
                     print("Dear", requested_account.name,", You can deposit only between Rs.1000 and Rs.100000")
                     return self.balance
                 break
-        self.atm_balance += amount
-        return self.atm_balance
+        self.__atm_balance += amount
+        return self.__atm_balance
     
     def withdraw(self, acc_no, amount):
 
@@ -52,8 +89,8 @@ class ATM:
                     print("Dear", requested_account.name, ", You can withdraw only between Rs.1000 and Rs.100000")
                     return self.balance
                 break    
-        self.atm_balance -= amount
-        return self.atm_balance
+        self.__atm_balance -= amount
+        return self.__atm_balance
     
     def check_pin(self, bank_account):
         enter_pin = int(input("Enter the Pin : "))
@@ -70,7 +107,7 @@ class ATM:
                 print("Account No.         : ", account_arr[accounts].acc_no, ) 
                 print("Balance             : ", account_arr[accounts].balance)
                 break
-        print("ATM_machine balance : ", self.atm_balance)
+        print("ATM_machine balance : ", self.__atm_balance)
     
     def cash_count(self):
         
@@ -168,7 +205,31 @@ class ATM:
             except Exception:
                 print("Error, Enter valid option")         
                         
-    
+
+
+    def atm_details(self):
+        g = open("python.txt", 'a')
+        g.write(str(atm_machine.__atm_balance) + "," + str(atm_machine.hundrd_counts) + "," + str(atm_machine.two_hundrd_counts) + "," + str(atm_machine.five_hundrd_counts))
+        g.close()
+
+
+        print("ATM_machine balance : ", atm_machine.__atm_balance)
+        print("No. of hundred rupees notes      : ", atm_machine.hundrd_counts)
+        print("No. of two_hundred rupees notes  : ", atm_machine.two_hundrd_counts)
+        print("No. of five_hundred rupees notes : ", atm_machine.five_hundrd_counts)    
+
+    def accounts_details(self):
+        f = open('python.txt', 'w')
+        for accounts in arr:  
+            
+            account_no = str(accounts.acc_no)
+            account_bal = str(accounts.balance)
+
+            f.write(account_no + "," +  account_bal + "," + accounts.name)
+            f.write("\n")
+        f.write("\n")
+        f.close()
+
 
 accholder_1 = bk.Bank_account(1234, "Sangeetha", 2345)
 accholder_2 = bk.Bank_account(2345, "Padmaja", 3456)
@@ -177,13 +238,9 @@ accholder_4 = bk.Bank_account(5678, "Akshaya", 6789)
 accholder_5 = bk.Bank_account(6789, "Keerthana", 7890)
 accholder_6 = bk.Bank_account(7890, "Kaviya", 8901)
 
-print(accholder_1.balance)
-arr = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
-for i in range(len(arr)):
-    if i == 0:
-        print("Account_No.\t", "Balance\n")
 
-    print(arr[i].acc_no, "\t\t", arr[i].balance, "\n")
+arr = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
+
 
 atm_machine = ATM(arr)
 while True:
@@ -200,12 +257,9 @@ while True:
     else:
         break        
 
-for i in range(len(arr)):
-    if i == 0:
-        print("Account_No.\t", "Balance\n")
-    print(arr[i].acc_no, "\t\t", arr[i].balance, "\n")
+atm_machine.accounts_details()
+atm_machine.atm_details()
+atm_machine.printing_details(arr)
 
-print("ATM_machine balance : ", atm_machine.atm_balance)
-print("No. of hundred rupees notes      : ", atm_machine.hundrd_counts)
-print("No. of two_hundred rupees notes  : ", atm_machine.two_hundrd_counts)
-print("No. of five_hundred rupees notes : ", atm_machine.five_hundrd_counts)
+
+

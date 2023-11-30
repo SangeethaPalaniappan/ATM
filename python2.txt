@@ -1,0 +1,18 @@
+Account_No.
+Balance
+1234
+5000
+2345
+0
+3456
+0
+5678
+0
+6789
+0
+7890
+0
+ATM_machine balance              : 5000
+No. of hundred rupees notes      : 10
+No. of two_hundred rupees notes  : 15
+No. of five_hundred rupees notes : 2
