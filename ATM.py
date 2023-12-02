@@ -7,9 +7,18 @@ sys.path.append(r'C:\Users\sange\ATM')
 import Bank_Account as bk
 
 
-class ATM:
-    def __init__(self, array):   
 
+class ATM:
+    def __init__(self):   
+        accholder_1 = bk.Bank_account(1234, "Sangeetha", 2345)
+        accholder_2 = bk.Bank_account(2345, "Padmaja", 3456)
+        accholder_3 = bk.Bank_account(3456, "Abinaya", 5678)
+        accholder_4 = bk.Bank_account(5678, "Akshaya", 6789)
+        accholder_5 = bk.Bank_account(6789, "Keerthana", 7890)
+        accholder_6 = bk.Bank_account(7890, "Kaviya", 8901)
+
+
+        array = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
         arr = []
         g = open("python.txt")
         for text in g:
@@ -20,15 +29,15 @@ class ATM:
         for amount in arr:
             arrays.append(amount.split(","))
 
-
+        print(arrays)
         for nums in range(len(arrays)):
             if arrays[nums][0] == "\n":
                 continue
             for req_acc in array:
-                if arrays[nums][0] == "\n":
+                if arrays[nums][0] == "\n": 
                     continue
                 if req_acc.acc_no == int(arrays[nums][0]):
-                    req_acc.balance += int(arrays[nums][1])
+                    req_acc.balance += int(arrays[nums][2])
                     break
             
         self.__atm_balance = int(arrays[len(arrays) - 1][0])
@@ -220,46 +229,39 @@ class ATM:
 
     def accounts_details(self):
         f = open('python.txt', 'w')
-        for accounts in arr:  
+        for accounts in self.arr_bank_holders:  
             
             account_no = str(accounts.acc_no)
             account_bal = str(accounts.balance)
+            account_pin = str(accounts.pin)
 
-            f.write(account_no + "," +  account_bal + "," + accounts.name)
+            f.write(account_no + "," + accounts.name + "," + account_bal + ","  + account_pin + ",")
             f.write("\n")
         f.write("\n")
         f.close()
 
 
-accholder_1 = bk.Bank_account(1234, "Sangeetha", 2345)
-accholder_2 = bk.Bank_account(2345, "Padmaja", 3456)
-accholder_3 = bk.Bank_account(3456, "Abinaya", 5678)
-accholder_4 = bk.Bank_account(5678, "Akshaya", 6789)
-accholder_5 = bk.Bank_account(6789, "Keerthana", 7890)
-accholder_6 = bk.Bank_account(7890, "Kaviya", 8901)
 
 
-arr = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
 
-
-atm_machine = ATM(arr)
+atm_machine = ATM()
 while True:
     option = input("Do you want to do transactions? (Yes/No) ")
     if option == "Yes":
         try :    
             Acc_No = int(input("Account_No : "))
-            for i in arr:
+            for i in atm_machine.arr_bank_holders:
                 if Acc_No == i.acc_no:
-                    call = atm_machine.transaction(Acc_No, arr)
+                    call = atm_machine.transaction(Acc_No, atm_machine.arr_bank_holders)
                     break
         except Exception :
             print("Error, Enter valid option")
     else:
         break        
 
+
 atm_machine.accounts_details()
 atm_machine.atm_details()
-atm_machine.printing_details(arr)
-
+atm_machine.printing_details(atm_machine.arr_bank_holders)
 
 
