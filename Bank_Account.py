@@ -1,5 +1,18 @@
 class Bank_account:
-    def __init__(self, acc_no, name, pin, amount = 0):
+    def __init__(self):
+        file = open("python2.txt")
+        account_details = []
+        for accounts in file:
+            account_details.append(accounts)
+        print(account_details)    
+        file.close()
+        print("\n")
+        self.arrays = []
+        for line in account_details:
+            self.arrays.append(line.split(","))
+        print(self.arrays)
+
+    def account_creation(self, acc_no, name, pin, amount = 0):
         self.acc_no = acc_no
         self.name = name
         self.pin = pin
@@ -14,7 +27,7 @@ class Bank_account:
         return self.balance
             
         
-        
+account  =  Bank_account()             
 
 
         
