@@ -10,42 +10,44 @@ import Bank_Account as bk
 
 class ATM:
     def __init__(self):   
-        accholder_1 = bk.Bank_account(1234, "Sangeetha", 2345)
-        accholder_2 = bk.Bank_account(2345, "Padmaja", 3456)
-        accholder_3 = bk.Bank_account(3456, "Abinaya", 5678)
-        accholder_4 = bk.Bank_account(5678, "Akshaya", 6789)
-        accholder_5 = bk.Bank_account(6789, "Keerthana", 7890)
-        accholder_6 = bk.Bank_account(7890, "Kaviya", 8901)
-
-
-        array = [accholder_1, accholder_2, accholder_3, accholder_4, accholder_5, accholder_6]
+        
         arr = []
-        g = open("python.txt")
+        g = open("python2.txt")
         for text in g:
-            arr.append(text)
+            arr.append(text.split(","))
         g.close()
+        print(arr)
+        account_holder_array = []
+        for i in range(len(arr) - 1):
+            account_holder = input("Account_holder_count : ")
+            account_holder_array.append(account_holder)
+        print(account_holder_array)    
+        for nums in range(len(arr) - 1):
+            account_holder_array[nums] = bk.Bank_account(int(arr[nums][0]), arr[nums][1], int(arr[nums][3]))
 
-        arrays = []
-        for amount in arr:
-            arrays.append(amount.split(","))
-
-        print(arrays)
-        for nums in range(len(arrays)):
-            if arrays[nums][0] == "\n":
-                continue
-            for req_acc in array:
-                if arrays[nums][0] == "\n": 
-                    continue
-                if req_acc.acc_no == int(arrays[nums][0]):
-                    req_acc.balance += int(arrays[nums][2])
+        print(account_holder_array)
+        length_of_acc_holder_array = len(account_holder_array)
+        for nums in range(length_of_acc_holder_array):
+            for req_acc in account_holder_array:
+                if req_acc.acc_no == account_holder_array[nums].acc_no:
+                    req_acc.balance += account_holder_array[nums].balance
                     break
-            
-        self.__atm_balance = int(arrays[len(arrays) - 1][0])
-        self.arr_bank_holders = array
-        self.hundrd_counts = int(arrays[len(arrays) - 1][1])
-        self.two_hundrd_counts = int(arrays[len(arrays) - 1][2])
-        self.five_hundrd_counts = int(arrays[len(arrays) - 1][3])
-        self.printing_details(array)
+        self.arr_bank_holders = account_holder_array
+        atm_machine_details = []
+
+        file_atm = open("python.txt")
+        for text in file_atm:
+            atm_machine_details.append(text.split(","))
+        file_atm.close()    
+        
+        atm_array = atm_machine_details[0]
+        print(atm_array)
+        self.__atm_balance = int(atm_array[0])
+        
+        self.hundrd_counts = int(atm_array[1])
+        self.two_hundrd_counts = int(atm_array[2])
+        self.five_hundrd_counts = int(atm_array[3])
+        self.printing_details(account_holder_array)
 
 
     def printing_details(self, arr):
@@ -68,7 +70,9 @@ class ATM:
                 if amount > 1000 and amount < 100000:
                     if self.check_pin(requested_account) == True:
                         requested_account.deposits(amount)
-                        print("Rs.", amount, "deposited Successfully")                        
+                        print("Rs.", amount, "deposited Successfully")   
+                    else:
+                        return None                          
                 else:
                     print("Dear", requested_account.name,", You can deposit only between Rs.1000 and Rs.100000")
                     return self.balance
@@ -109,7 +113,7 @@ class ATM:
             print("Enter valid pin")
             return None
         
-    def account_details(self, account_arr,acc_no):
+    def account_details(self, account_arr, acc_no):
         for accounts in range(len(account_arr)):
             if account_arr[accounts].acc_no == acc_no:
                 print("Dear", (account_arr[accounts]).name, ",", "Your account details \n")
@@ -196,9 +200,9 @@ class ATM:
                     else:
                         extra_amount = amount - counting_cash
                         if extra_amount < 0:
-                            print("You have given more than", amount, "Take", abs(extra_amount), "and deposit")
+                            print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
                         else:
-                            print("You have given lesser than", amount, "Put", extra_amount, "and deposit" )               
+                            print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
 
                 elif option == 2:
                     amount = int(input("Enter the amount : "))
@@ -217,7 +221,7 @@ class ATM:
 
 
     def atm_details(self):
-        g = open("python.txt", 'a')
+        g = open("python.txt", 'w')
         g.write(str(atm_machine.__atm_balance) + "," + str(atm_machine.hundrd_counts) + "," + str(atm_machine.two_hundrd_counts) + "," + str(atm_machine.five_hundrd_counts))
         g.close()
 
@@ -228,7 +232,7 @@ class ATM:
         print("No. of five_hundred rupees notes : ", atm_machine.five_hundrd_counts)    
 
     def accounts_details(self):
-        f = open('python.txt', 'w')
+        f = open('python2.txt', 'w')
         for accounts in self.arr_bank_holders:  
             
             account_no = str(accounts.acc_no)
@@ -239,27 +243,54 @@ class ATM:
             f.write("\n")
         f.write("\n")
         f.close()
+    
+    def new_account(self):
+        print("Welcome! You're here to create new account!")
+        acc_no = int(input("Enter account number : "))
+        name = input("Enter Your Name : ")
+        pin = int(input("Enter 4 digit pin : "))      
+        amount = 0
+        self.arr_bank_holders.append(bk.Bank_account(acc_no, name, pin))
+        file_bank_account = open("python2.txt", "a")
+        account_no = str(acc_no)
+        account_bal = str(amount)
+        account_pin = str(pin)
+
+        file_bank_account.write(account_no + "," + name + "," + account_bal + ","  + account_pin + ",")
+        file_bank_account.write("\n")
+
+        file_bank_account.close()
+
+       
 
 
 
 
 
 atm_machine = ATM()
+length = len(atm_machine.arr_bank_holders)
+hold_arr = atm_machine.arr_bank_holders
+
 while True:
     option = input("Do you want to do transactions? (Yes/No) ")
     if option == "Yes":
         try :    
             Acc_No = int(input("Account_No : "))
-            for i in atm_machine.arr_bank_holders:
-                if Acc_No == i.acc_no:
+            for i in range(length):
+                print(hold_arr[i].acc_no)
+                if Acc_No == (hold_arr[i].acc_no):
                     call = atm_machine.transaction(Acc_No, atm_machine.arr_bank_holders)
                     break
         except Exception :
             print("Error, Enter valid option")
     else:
-        break        
-
-
+        break   
+while True:        
+    option_new_acc = input("Do you want to create new account? (Yes/No) ")
+    if option_new_acc == "Yes":
+        atm_machine.new_account()
+    else:
+        break
 atm_machine.accounts_details()
 atm_machine.atm_details()
 atm_machine.printing_details(atm_machine.arr_bank_holders)
