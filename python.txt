@@ -1,8 +1,1 @@
-1234,500,Sangeetha
-2345,10000,Padmaja
-3456,0,Abinaya
-5678,0,Akshaya
-6789,0,Keerthana
-7890,0,Kaviya
-
-10500,29,38,0
+28000,120,65,6

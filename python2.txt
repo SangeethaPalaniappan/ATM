@@ -1,18 +1,9 @@
-Account_No.
-Balance
-1234
-5000
-2345
-0
-3456
-0
-5678
-0
-6789
-0
-7890
-0
-ATM_machine balance              : 5000
-No. of hundred rupees notes      : 10
-No. of two_hundred rupees notes  : 15
-No. of five_hundred rupees notes : 2
+1234,Sangeetha,6000,2345,
+2345,Padmaja,0,3456,
+3456,Abinaya,20000,5678,
+5678,Akshaya,0,6789,
+6789,Keerthana,0,7890,
+7890,Kaviya,0,8901,
+9876,8765,2000,8765,
+1289,Sangee,0,2023,
+
