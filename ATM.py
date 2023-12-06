@@ -6,21 +6,12 @@ sys.path.append(r'C:\Users\sange\ATM')
 # now you can import your module
 import Bank_Account as bk
 
+from BankTransactions import BankTransactions as bt
 
-
-class AtmMachine:
-    def __init__(self):   
+class AtmMachine(bt):
+    def __init__(self, account_array):   
         
-        arr = []
-        g = open("AccountDetails.txt")
-        for text in g:
-            arr.append(text.split(","))
-        g.close()
-        print(arr)
-        self.__arr_bank_holders = []
-        for nums in range(len(arr) - 1):
-            self.__arr_bank_holders.append(bk.BankAccount(int(arr[nums][0]), arr[nums][1], int(arr[nums][3]), int(arr[nums][2])))
-        
+        self.account_array = account_array
         self.__atm_machine_details = []
 
         file_atm = open("AtmDetails.txt")
@@ -38,11 +29,11 @@ class AtmMachine:
 
 
     def printing_details(self):
-        for itr in range(len(self.__arr_bank_holders)):
+        for itr in range(len(self.account_array)):
             if itr == 0:
                 print("Account_No.\t", "Balance\n")
 
-            print(self.__arr_bank_holders[itr].get_acc_no(), "\t\t", self.__arr_bank_holders[itr].get_balance(), "\n")   
+            print(self.account_array[itr].get_acc_no(), "\t\t", self.account_array[itr].get_balance(), "\n")   
         
         print("\n")
         print("ATM_machine balance : ", self.__atm_balance)
@@ -50,32 +41,32 @@ class AtmMachine:
         print("No. of two_hundred rupees notes  : ", self.__two_hundrd_counts)
         print("No. of five_hundred rupees notes : ", self.__five_hundrd_counts)      
 
-    def __deposit(self, acc_no, amount):
+    def deposit(self, acc_no, amount):
 
-        for requested_account in self.__arr_bank_holders:
+        for requested_account in self.account_array:
             if acc_no == requested_account.get_acc_no():
-                if amount > 1000 and amount < 100000:
+                if amount >= 500 and amount < 100000:
                     if self.__check_pin(requested_account) == True:
                         requested_account.account_deposit(amount)
                         print("Rs.", amount, "deposited Successfully")   
                     else:
                         return None                          
                 else:
-                    print("Dear", requested_account.get_name(),", You can deposit only between Rs.1000 and Rs.100000")
+                    print("Dear", requested_account.get_name(),", You can deposit from Rs.500 to Rs.100000")
                     return self.balance
                 break
         self.__atm_balance += amount
         return self.__atm_balance
     
-    def __withdraw(self, acc_no, amount):
+    def withdraw(self, acc_no, amount):
 
-        for requested_account in self.__arr_bank_holders:
+        for requested_account in self.account_array:
             if acc_no == requested_account.get_acc_no():
                 if amount > requested_account.get_balance():
                     print("Not enough Money") 
                     return None
                 
-                if amount < 100000 and amount > 1000:
+                if amount <= 100000 and amount >= 500:
                     if self.__check_pin(requested_account) == True:
                             obj_withdraw_process = self.__withdraw_process(amount, requested_account.get_balance())
                             if obj_withdraw_process != None:
@@ -86,7 +77,7 @@ class AtmMachine:
                     else:
                         return None    
                 else:
-                    print("Dear", requested_account.get_name(), ", You can withdraw only between Rs.1000 and Rs.100000")
+                    print("Dear", requested_account.get_name(), ", You can withdraw from Rs.500 to Rs.100000")
                     return self.balance
                 break    
         self.__atm_balance -= amount
@@ -100,7 +91,7 @@ class AtmMachine:
             print("Enter valid pin")
             return None
         
-    def __account_details(self, account_arr, acc_no):
+    def account_details(self, account_arr, acc_no):
         for accounts in range(len(account_arr)):
             if account_arr[accounts].get_acc_no() == acc_no:
                 print("Dear", (account_arr[accounts]).get_name(), ",", "Your account details \n")
@@ -125,7 +116,7 @@ class AtmMachine:
     def __withdraw_process(self, amount, account_balance):
         final_balance = account_balance - amount
         if final_balance >= 500:
-            COUNT_OF_FIVE_HUNDRD, COUNT_OF_TWO_HUNDRD, COUNT_OF_ONE_HUNDRD  = 0, 0 ,0 
+            count_of_five_hundrd, count_of_two_hundrd, count_of_one_hundrd  = 0, 0 ,0 
 
             five_hundrd = self.__five_hundrd_counts
             two_hundrd = self.__two_hundrd_counts
@@ -133,7 +124,7 @@ class AtmMachine:
 
             while (amount % 500 == 0 or amount % 500 == 200 or amount % 500 == 100)and amount != 0 and five_hundrd != 0:
                 amount -= 500
-                COUNT_OF_FIVE_HUNDRD += 1
+                count_of_five_hundrd += 1
                 five_hundrd -= 1
                 if amount == 100 or amount == 200:
                     break
@@ -141,7 +132,7 @@ class AtmMachine:
             while (amount % 200 == 0 or amount % 200 == 100) and amount != 0 and two_hundrd != 0:
                 
                 amount -= 200
-                COUNT_OF_TWO_HUNDRD += 1
+                count_of_two_hundrd += 1
                 two_hundrd -= 1
                 if amount == 100:
                     break
@@ -149,13 +140,13 @@ class AtmMachine:
             while amount % 100 == 0 and amount != 0 and one_hundrd != 0:
                 
                 amount -= 100
-                COUNT_OF_ONE_HUNDRD += 1  
+                count_of_one_hundrd += 1  
                 one_hundrd -= 1 
                 
             if amount == 0:       
-                self.__hundrd_counts       -= COUNT_OF_ONE_HUNDRD
-                self.__two_hundrd_counts   -= COUNT_OF_TWO_HUNDRD
-                self.__five_hundrd_counts  -= COUNT_OF_FIVE_HUNDRD 
+                self.__hundrd_counts       -= count_of_one_hundrd
+                self.__two_hundrd_counts   -= count_of_two_hundrd
+                self.__five_hundrd_counts  -= count_of_five_hundrd 
                 self.balance = final_balance
                 return self.balance
             else:
@@ -166,48 +157,8 @@ class AtmMachine:
             return None     
 
 
-    def __transaction(self, acc_no, arr):
-        while True:
-            print("\n")
-            print("1. Deposit")
-            print("2. Withdraw")
-            print("3. Account Detail")
-            print("4. Exit")
-            try:
-                option = int(input("Select any one option : "))
-                print("\n")
-                if option == 1:
-                    amount = int(input("Enter the amount : "))
-                    counting_cash = self.__cash_count()
-                    if counting_cash == amount:
-                        if self.__deposit(acc_no, amount) == None:
-                            continue
-                        else:
-                            self.__add_cash_count()
-                    else:
-                        extra_amount = amount - counting_cash
-                        if extra_amount < 0:
-                            print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
-                        else:
-                            print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
-
-                elif option == 2:
-                    amount = int(input("Enter the amount : "))
-
-                    if self.__withdraw(acc_no, amount) == None:
-                        continue
-                elif option == 3:
-                    self.__account_details(arr,acc_no)
-                    
-                elif option == 4:
-                    print("Thank You! Visit Again!\n")
-                    break
-            except Exception:
-                print("Error, Enter valid option")         
-                        
-
-
-    def atm_details(self):
+    
+    def write_atm_details_in_file(self):
         g = open("AtmDetails.txt", 'w')
         g.write(str(self.__atm_balance) + "," + str(self.__hundrd_counts) + "," + str(self.__two_hundrd_counts) + "," + str(self.__five_hundrd_counts))
         g.close()
@@ -218,78 +169,156 @@ class AtmMachine:
         print("No. of two_hundred rupees notes  : ", self.__two_hundrd_counts)
         print("No. of five_hundred rupees notes : ", self.__five_hundrd_counts)    
 
-    def accounts_details(self):
-        f = open('AccountDetails.txt', 'w')
-        for accounts in self.__arr_bank_holders:  
-            
-            account_no = str(accounts.get_acc_no())
-            account_bal = str(accounts.get_balance())
-            account_pin = str(accounts.get_acc_pin())
-
-            f.write(account_no + "," + accounts.get_name() + "," + account_bal + ","  + account_pin + ",")
-            f.write("\n")
-        f.write("\n")
-        f.close()
     
-    def __create_new_account(self):
+    def create_new_account(self):
         print("\nWelcome! You're here to create new account!\n")
         acc_no = int(input("Enter account number : "))
         name = input("Enter Your Name : ")
         pin = int(input("Enter 4 digit pin : "))      
         AMOUNT = 0
-        self.__arr_bank_holders.append(bk.BankAccount(acc_no, name, pin, AMOUNT))
+        password = int(input("Enter the password : "))
+        self.account_array.append(bk.BankAccount(acc_no, name, pin, AMOUNT, password))
         print("Account created successfully\n")
         file_bank_account = open("AccountDetails.txt", "a")
-        account_no = str(acc_no)
+        '''account_no = str(acc_no)
         account_bal = str(AMOUNT)
         account_pin = str(pin)
+        account_password = str(password)
 
-        file_bank_account.write(account_no + "," + name + "," + account_bal + ","  + account_pin + ",")
-        file_bank_account.write("\n")
+        file_bank_account.write(account_no + "," + name + "," + account_bal  + "," + account_pin+ ","  + account_password + ",")
+        file_bank_account.write("\n")'''
         file_bank_account.close()
 
 
-    def __to_do_transactions(self):
+    def to_do_transactions(self):
         while True:    
             transaction_option = input("Do you want to do transactions? (Yes/No): ")
             if transaction_option == "Yes":
                 try:    
-                    MATCH = 0
-                    Acc_No = int(input("Account_No : "))
-                    for i in range(len(self.__arr_bank_holders)):
-                        if Acc_No == (self.__arr_bank_holders[i].get_acc_no()):
-                            MATCH = 1
-                            self.__transaction(Acc_No, self.__arr_bank_holders)
+                    match = 0
+                    acc_No = int(input("Account_No : "))
+                    for i in range(len(self.account_array)):
+                        if acc_No == (self.account_array[i].get_acc_no()):
+                            match = 1
+                            transaction(acc_No, self.account_array)
                             break
                         
                             
-                    if MATCH == 0:
+                    if match == 0:
                         print("Enter correct Account Number")    
                         break    
                 except Exception :
                     print("Error, Enter valid Number")
             else:
-                break        
+                break    
    
-    def options(self):
-        while True:
-            print("1. Create New Account") 
-            print("2. Do Transactions")   
-            print("3. Exit")
-            option_1_or_2_or_3 = int(input("Select any one of the options(1/2/3) : "))
-            if option_1_or_2_or_3 == 2:
-                self.__to_do_transactions()        
+    
+    def cash_handling(self, requested_option):
+        if requested_option == 1:
+            return self.__cash_count()
+        elif requested_option == 2:
+            return self.__add_cash_count()
+
+    def authenticate(self, sender_acc_no, sender_acc_pin_no):
         
-            elif option_1_or_2_or_3 == 1:
-                self.__create_new_account()
-                self.__to_do_transactions() 
-            elif option_1_or_2_or_3 == 3:
+        acc_no_match = 0
+        for sender_acc_obj in self.account_array:
+            if sender_acc_obj.get_acc_no() == sender_acc_no:
+                acc_no_match = 1
                 break
+        if acc_no_match == 1:
+            pin_match = 0        
+            if sender_acc_obj.get_acc_pin() == sender_acc_pin_no:
+                pin_match = 1
 
-atm_machine = AtmMachine()
-atm_machine.options()
-atm_machine.accounts_details()
-atm_machine.atm_details()
+            if pin_match == 1:
+                receiver_acc_no = int(input("Enter receiver Account Number : "))
+                for receiver_acc_obj in self.account_array:
+                    if receiver_acc_obj.get_acc_no() == receiver_acc_no:
+                        if sender_acc_obj.get_acc_no() !=  receiver_acc_no:
+                            bt.amount_transfer(sender_acc_obj, receiver_acc_obj)      
+                             
+                        else:
+                            print("Sender and Receiver account no. should not be same")     
+                            return None   
+            
+            else:
+                print("Enter correct password  ")        
+        else:
+            print("Enter correct Account Number ")
+
+
+def transaction(acc_no, arr):
+    while True:
+        print("\n")
+        print("1. Deposit")
+        print("2. Withdraw")
+        print("3. Amount Transfer")
+        print("4. Account Detail")
+        print("5. Exit")
+        try:
+
+            option = int(input("Select any one option : "))
+            print("\n")
+            if option == 1:
+                amount = int(input("Enter the amount : "))
+                counting_cash = atm_machine.cash_handling(1)
+                if counting_cash == amount:
+                    if atm_machine.deposit(acc_no, amount) == None:
+                        continue
+                    else:
+                        atm_machine.cash_handling(2)
+                else:
+                    extra_amount = amount - counting_cash
+                    if extra_amount < 0:
+                        print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
+                    else:
+                        print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
+
+            elif option == 2:
+                amount = int(input("Enter the amount : "))
+
+                if atm_machine.withdraw(acc_no, amount) == None:
+                    continue
+            elif option == 3:
+                print("AmountTransaction")
+                sender_acc_no = int(input("Enter your Account Number : "))
+                sender_pin_no = int(input("Enter your Pin No. : "))
+                atm_machine.authenticate(sender_acc_no, sender_pin_no)
+                
+                
+            elif option == 4:
+                atm_machine.account_details(arr,acc_no)
+                
+            elif option == 5:
+                print("Thank You! Visit Again!\n")
+                break
+        except Exception:
+            print("Error, Enter valid option")         
+                    
+def options():
+    while True:
+        print("1. Create New Account") 
+        print("2. Do Transactions")   
+        print("3. Exit")
+        option = int(input("Select any one of the options : "))
+        if option == 2:
+            atm_machine.to_do_transactions()                
+    
+        elif option == 1:
+            atm_machine.create_new_account() 
+            atm_machine.to_do_transactions()
+
+        elif option == 3:
+            break
+
+
+    
+
+
+atm_machine = AtmMachine(bk.arr_bank_acc_holders)
+
+options()
+bk.BankAccount.write_acc_details_in_file(bk.arr_bank_acc_holders)
+atm_machine.write_atm_details_in_file()
 atm_machine.printing_details()
-
-
