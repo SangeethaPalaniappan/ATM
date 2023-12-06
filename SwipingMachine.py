@@ -8,10 +8,13 @@ import Bank_Account as bk
 
 
 class SwipingMachine(bt):
+    def __init__(self, receiver_acc_no):
+        self.receiver_acc_obj = receiver_acc_no
+
     def authenticate(self, sender_acc_no, sender_acc_password):
         
         acc_no_match = 0
-        for sender_acc_obj in self.bank_acc_arr:
+        for sender_acc_obj in bk.arr_bank_acc_holders:
             if sender_acc_obj.get_acc_no() == sender_acc_no:
                 acc_no_match = 1
                 break
@@ -20,38 +23,31 @@ class SwipingMachine(bt):
             if sender_acc_obj.get_acc_password() == sender_acc_password:
                 password_match = 1
 
-            if password_match == 1:
-                RECEIVER_ACC_NO = 2209
-                for receiver_acc_obj in bk.arr_bank_acc_holders:
-                    if receiver_acc_obj.get_acc_no() == RECEIVER_ACC_NO:
-                        if sender_acc_obj.get_acc_no() !=  RECEIVER_ACC_NO:
-                            bt.amount_transfer(sender_acc_obj, receiver_acc_obj) 
-                            break     
-                             
-                        else:
-                            print("Sender and Receiver account no. should not be same")     
-                            return None
-            
+            if password_match == 1: 
+                if sender_acc_obj.get_acc_no() != self.receiver_acc_obj:
+                    return self.amount_transfer(sender_acc_obj)
+                else:
+                    print("Sender and Receiver account no. should not be same")     
+                    return None            
             else:
                 print("Enter correct password  ")       
                 return None 
         else:
             print("Enter correct Account Number ")
-            return None
+            return None    
         
-    def amount_transfer(sender_acc_obj, receiver_acc_obj):
+    def amount_transfer(self, sender_acc_obj):
         transfer_acc_no = 0  
         amount = int(input("Enter the amount you need to transfer : "))
         if sender_acc_obj.get_balance() < amount:
             print("You don't have enough money in your account")
             return None
-        # need to include the minimum balance condition
         else:
             sender_acc_obj.account_withdraw(amount)
-            receiver_acc_obj.account_deposit(amount)
+            self.receiver_acc_obj.account_deposit(amount)
             transfer_acc_no = 1
             
         if transfer_acc_no == 1:
-            print("Amount transfered Successfully!")
+            return "Amount transfered Successfully!"
         else:
-            print("Enter correct receiver account no.")
+            print("Amount not transfered")

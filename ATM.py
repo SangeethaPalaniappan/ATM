@@ -200,7 +200,7 @@ class AtmMachine(bt):
                     for i in range(len(self.account_array)):
                         if acc_No == (self.account_array[i].get_acc_no()):
                             match = 1
-                            transaction(acc_No, self.account_array)
+                            self.transaction(acc_No, self.account_array)
                             break
                         
                             
@@ -232,15 +232,8 @@ class AtmMachine(bt):
                 pin_match = 1
 
             if pin_match == 1:
-                receiver_acc_no = int(input("Enter receiver Account Number : "))
-                for receiver_acc_obj in self.account_array:
-                    if receiver_acc_obj.get_acc_no() == receiver_acc_no:
-                        if sender_acc_obj.get_acc_no() !=  receiver_acc_no:
-                            bt.amount_transfer(sender_acc_obj, receiver_acc_obj)      
-                             
-                        else:
-                            print("Sender and Receiver account no. should not be same")     
-                            return None   
+                bt.amount_transfer(sender_acc_obj, self.account_array)      
+                               
             
             else:
                 print("Enter correct password  ")        
@@ -248,77 +241,69 @@ class AtmMachine(bt):
             print("Enter correct Account Number ")
 
 
-def transaction(acc_no, arr):
-    while True:
-        print("\n")
-        print("1. Deposit")
-        print("2. Withdraw")
-        print("3. Amount Transfer")
-        print("4. Account Detail")
-        print("5. Exit")
-        try:
-
-            option = int(input("Select any one option : "))
+    def transaction(self, acc_no, arr):
+        while True:
             print("\n")
-            if option == 1:
-                amount = int(input("Enter the amount : "))
-                counting_cash = atm_machine.cash_handling(1)
-                if counting_cash == amount:
-                    if atm_machine.deposit(acc_no, amount) == None:
+            print("1. Deposit")
+            print("2. Withdraw")
+            print("3. Amount Transfer")
+            print("4. Account Detail")
+            print("5. Exit")
+            try:
+
+                option = int(input("Select any one option : "))
+                print("\n")
+                if option == 1:
+                    amount = int(input("Enter the amount : "))
+                    counting_cash = self.cash_handling(1)
+                    if counting_cash == amount:
+                        if self.deposit(acc_no, amount) == None:
+                            continue
+                        else:
+                            self.cash_handling(2)
+                    else:
+                        extra_amount = amount - counting_cash
+                        if extra_amount < 0:
+                            print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
+                        else:
+                            print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
+
+                elif option == 2:
+                    amount = int(input("Enter the amount : "))
+
+                    if self.withdraw(acc_no, amount) == None:
                         continue
-                    else:
-                        atm_machine.cash_handling(2)
-                else:
-                    extra_amount = amount - counting_cash
-                    if extra_amount < 0:
-                        print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
-                    else:
-                        print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
-
-            elif option == 2:
-                amount = int(input("Enter the amount : "))
-
-                if atm_machine.withdraw(acc_no, amount) == None:
-                    continue
-            elif option == 3:
-                print("AmountTransaction")
-                sender_acc_no = int(input("Enter your Account Number : "))
-                sender_pin_no = int(input("Enter your Pin No. : "))
-                atm_machine.authenticate(sender_acc_no, sender_pin_no)
-                
-                
-            elif option == 4:
-                atm_machine.account_details(arr,acc_no)
-                
-            elif option == 5:
-                print("Thank You! Visit Again!\n")
-                break
-        except Exception:
-            print("Error, Enter valid option")         
+                elif option == 3:
+                    print("AmountTransaction")
+                    sender_acc_no = int(input("Enter your Account Number : "))
+                    sender_pin_no = int(input("Enter your Pin No. : "))
+                    self.authenticate(sender_acc_no, sender_pin_no)
                     
-def options():
-    while True:
-        print("1. Create New Account") 
-        print("2. Do Transactions")   
-        print("3. Exit")
-        option = int(input("Select any one of the options : "))
-        if option == 2:
-            atm_machine.to_do_transactions()                
-    
-        elif option == 1:
-            atm_machine.create_new_account() 
-            atm_machine.to_do_transactions()
+                    
+                elif option == 4:
+                    self.account_details(arr,acc_no)
+                    
+                elif option == 5:
+                    print("Thank You! Visit Again!\n")
+                    break
+            except Exception:
+                print("Error, Enter valid option")         
+                        
+    def options(self):
+        while True:
+            print("1. Create New Account") 
+            print("2. Do Transactions")   
+            print("3. Exit")
+            option = int(input("Select any one of the options : "))
+            if option == 2:
+                self.to_do_transactions()                
+        
+            elif option == 1:
+                self.create_new_account() 
+                self.to_do_transactions()
 
-        elif option == 3:
-            break
+            elif option == 3:
+                break
 
 
-    
 
-
-atm_machine = AtmMachine(bk.arr_bank_acc_holders)
-
-options()
-bk.BankAccount.write_acc_details_in_file(bk.arr_bank_acc_holders)
-atm_machine.write_atm_details_in_file()
-atm_machine.printing_details()
