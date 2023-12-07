@@ -100,18 +100,19 @@ class AtmMachine(bt):
                 break
         print("ATM_machine balance : ", self.__atm_balance)
     
-    def __cash_count(self):
+    def __cash_count(self, amount):
         
-        self.hundrd_count        = int(input("No. of hundred rupees notes       : "))
-        self.twohundr_count      = int(input("No. of two_hundred rupees notes   : "))
-        self.five_hundr_count    = int(input("No. of five_hundred rupees notes  : "))
-        total_count = (self.hundrd_count * 100) + (self.twohundr_count * 200) + (self.five_hundr_count * 500)
-        return total_count
-    
-    def __add_cash_count(self):
-        self.__hundrd_counts       += self.hundrd_count
-        self.__two_hundrd_counts   += self.twohundr_count
-        self.__five_hundrd_counts  += self.five_hundr_count
+        hundrd_count        = int(input("No. of hundred rupees notes       : "))
+        twohundr_count      = int(input("No. of two_hundred rupees notes   : "))
+        five_hundr_count    = int(input("No. of five_hundred rupees notes  : "))
+        total_count = (hundrd_count * 100) + (twohundr_count * 200) + (five_hundr_count * 500)
+  
+        if total_count == amount:
+            self.__hundrd_counts       += hundrd_count
+            self.__two_hundrd_counts   += twohundr_count
+            self.__five_hundrd_counts  += five_hundr_count
+            return 1
+        return 0
 
     def __withdraw_process(self, amount, account_balance):
         final_balance = account_balance - amount
@@ -213,11 +214,20 @@ class AtmMachine(bt):
                 break    
    
     
-    def cash_handling(self, requested_option):
-        if requested_option == 1:
-            return self.__cash_count()
-        elif requested_option == 2:
-            return self.__add_cash_count()
+    def cash_handling(self, acc_no):
+        amount = int(input("Enter the amount : "))
+        counting_cash = self.__cash_count(amount)
+        if counting_cash == True:
+            if self.deposit(acc_no, amount) == None:
+                return None
+            else:
+                return 1
+        else:
+            extra_amount = amount - counting_cash
+            if extra_amount < 0:
+                print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
+            else:
+                print("You have given", counting_cash, "Put", extra_amount, "and deposit" )
 
     def authenticate(self, sender_acc_no, sender_acc_pin_no):
         
@@ -254,19 +264,8 @@ class AtmMachine(bt):
                 option = int(input("Select any one option : "))
                 print("\n")
                 if option == 1:
-                    amount = int(input("Enter the amount : "))
-                    counting_cash = self.cash_handling(1)
-                    if counting_cash == amount:
-                        if self.deposit(acc_no, amount) == None:
-                            continue
-                        else:
-                            self.cash_handling(2)
-                    else:
-                        extra_amount = amount - counting_cash
-                        if extra_amount < 0:
-                            print("You have given", counting_cash, "Take", abs(extra_amount), "and deposit")
-                        else:
-                            print("You have given", counting_cash, "Put", extra_amount, "and deposit" )               
+                    if self.cash_handling(acc_no) == None:
+                        continue              
 
                 elif option == 2:
                     amount = int(input("Enter the amount : "))

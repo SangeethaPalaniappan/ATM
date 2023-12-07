@@ -3,7 +3,7 @@ import sys
 sys.path.append(r'C:\Users\sangee\ATM')
 import Bank_Account as bk
 class Details:
-    def write_acc_details_in_file():
+    def write_acc_details_in_file(self):
         f = open('AccountDetails.txt', 'w')
         for accounts in bk.arr_bank_acc_holders:  
             account_no = str(accounts.get_acc_no())

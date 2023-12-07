@@ -59,8 +59,11 @@ class TransactionOptions:
         else:
             print(swipe_obj)    
         self.acc_details_file_obj() 
-          
+
 
     def acc_details_file_obj(self): 
         acc_details_in_file = acc_details.Details()
         acc_details_in_file.write_acc_details_in_file()    
+
+transaction_options = TransactionOptions()
+transaction_options.options()        
