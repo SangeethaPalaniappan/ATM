@@ -30,7 +30,7 @@ class BankAccount:
         return self.__password
 
     @classmethod
-    def write_acc_details_in_file(self):
+    def write_acc_details_in_file():
         f = open('AccountDetails.txt', 'w')
         for accounts in arr_bank_acc_holders:  
             account_no = str(accounts.get_acc_no())
