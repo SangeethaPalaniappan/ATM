@@ -29,19 +29,8 @@ class BankAccount:
     def get_acc_password(self):
         return self.__password
 
-    @classmethod
-    def write_acc_details_in_file():
-        f = open('AccountDetails.txt', 'w')
-        for accounts in arr_bank_acc_holders:  
-            account_no = str(accounts.get_acc_no())
-            account_bal = str(accounts.get_balance())
-            account_pin = str(accounts.get_acc_pin())
-            account_password = str(accounts.get_acc_password())
 
-            f.write(account_no + "," + accounts.get_name() + "," + account_bal + ","  + account_pin + "," + account_password + ",")
-            f.write("\n")
-        f.close()
-
+    
     
 arr = []
 g = open("AccountDetails.txt")
