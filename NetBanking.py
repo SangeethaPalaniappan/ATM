@@ -4,7 +4,7 @@ import sys
 sys.path.append(r'C:\Users\sange\ATM')
 
 # now you can import your module
-import Bank_Account as bk
+
 from BankTransactions import BankTransactions as bt
 
 class NetBanking(bt):

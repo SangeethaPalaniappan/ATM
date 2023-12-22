@@ -181,13 +181,7 @@ class AtmMachine(bt):
         self.account_array.append(bk.BankAccount(acc_no, name, pin, AMOUNT, password))
         print("Account created successfully\n")
         file_bank_account = open("AccountDetails.txt", "a")
-        '''account_no = str(acc_no)
-        account_bal = str(AMOUNT)
-        account_pin = str(pin)
-        account_password = str(password)
-
-        file_bank_account.write(account_no + "," + name + "," + account_bal  + "," + account_pin+ ","  + account_password + ",")
-        file_bank_account.write("\n")'''
+        
         file_bank_account.close()
 
 

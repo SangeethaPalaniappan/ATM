@@ -24,7 +24,7 @@ class SwipingMachine(bt):
                 password_match = 1
 
             if password_match == 1: 
-                if sender_acc_obj.get_acc_no() != self.receiver_acc_obj:
+                if sender_acc_obj.get_acc_no() != self.receiver_acc_obj.get_acc_no(): # need to recode it
                     return self.amount_transfer(sender_acc_obj)
                 else:
                     print("Sender and Receiver account no. should not be same")     
